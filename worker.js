@@ -1,4 +1,4 @@
-const ORIGIN='https://bigQQ7.github.io';
+const ORIGIN='https://bigqq7.github.io';
 const grades=['大一','大二','大三','大四','研一','研二','研三'];
 export default {async fetch(request,env){
  const origin=request.headers.get('Origin');
