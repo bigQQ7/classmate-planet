@@ -30,7 +30,9 @@ export default {async fetch(request,env){
  let avatar=previous?JSON.parse(previous.data).avatar:'';
  if(input.avatarData){if(typeof input.avatarData!=='string'||!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(input.avatarData)||input.avatarData.length>400000)return reply({error:'头像格式不正确或图片过大。'},400);avatar=input.avatarData;}
  if(!previous){const count=await env.DB.prepare('SELECT COUNT(*) AS n FROM profiles').first();if(count.n>=500)return reply({error:'班级人数已满，请联系老师。'},409)}
- const data={name,age,wechat,grade,mbti:clean(input.mbti,16),zodiac:clean(input.zodiac,16),interests,goals,goal,avatar,showAge:false,showWechat:false};
+ const computer=clean(input.computer,16);
+ if(computer&&! ['Mac','Windows'].includes(computer))return reply({error:'请选择 Mac 或 Windows。'},400);
+ const data={name,age,wechat,grade,computer,mbti:clean(input.mbti,16),zodiac:clean(input.zodiac,16),interests,goals,goal,avatar,showAge:false,showWechat:false};
  await env.DB.prepare('INSERT INTO profiles(id,data,updated) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data,updated=excluded.updated').bind(id,JSON.stringify(data),Date.now()).run();
  return reply({ok:true});
  }catch{return reply({error:'暂时无法保存或读取资料，请稍后重试。'},503)}
